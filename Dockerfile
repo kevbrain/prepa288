@@ -16,11 +16,12 @@ EXPOSE 8080
 LABEL io.openshift.expose-services="8080:http"
 
 # This stuff is needed to ensure a clean start
+RUN chgrp -R 0 /var/www/html /var/run/httpd /var/log/httpd && \
+    chmod -R g=u /var/www/html /var/run/httpd /var/log/httpd
+
 RUN sed -i "s/Listen 80/Listen 8080/g" /etc/httpd/conf/httpd.conf \
 RUN sed -i "s/#ServerName www.example.com:80/ServerName 0.0.0.0:8080/g" \
     /etc/httpd/conf/httpd.conf
-RUN chgrp -R 0 /var/www/html /var/run/httpd /var/log/httpd && \
-    chmod -R g=u /var/www/html /var/run/httpd /var/log/httpd
 
 RUN rm -rf /run/httpd && mkdir /run/httpd
 
